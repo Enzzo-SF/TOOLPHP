@@ -2,7 +2,7 @@
 const
 host = "https://faucetbull.com/",
 register_link = "https://faucetbull.com/?r=720",
-typeCaptcha = "Recaptchav2",
+typeCaptcha = "hcaptcha",
 youtube = "https://youtube.com/@iewil";
 
 function h($data=0){
@@ -18,9 +18,9 @@ function  GetDashboard(){
 	if(preg_match('/Firewall/',$r)){
 		Firewall();goto dashbord;
 	}
-	$user = explode('<',explode('key="t-henry">',$r)[1])[0];
-	$bal = explode('</h4>',explode('<h4 class="mb-0">',$r)[1])[0];
-	$en = explode('</h4>',explode('<h4 class="mb-0">',$r)[2])[0];
+	$user = explode('<',explode('<h4 class="mb-0">',$r)[1])[0];
+	$bal = explode('</h4>',explode('<h4 class="mb-0">',$r)[3])[0];
+	$en = explode('</h4>',explode('<h4 class="mb-0">',$r)[4])[0];
 	return ["user"=>$user,"balance"=>$bal,"energy"=>$en];
 }
 function Firewall(){
@@ -61,7 +61,7 @@ function GetPtc(){
 		}
 		
 		$r = curl(host.'ptc/view/'.$id,h())[1];
-		$ptc = explode("'",explode("var url = '",$r)[1])[0];
+		$ptc = explode('"',explode('window.location.href = "',$r)[1])[0];
 		$ptc = parse_url($ptc)['host'];
 		
 		if($idptc == 0){
@@ -292,7 +292,7 @@ if($pil == 1){
 	goto menu;
 }elseif($pil == 5){
 	Title("Offerwall [Excentiv]");
-	$r = curl(host.'offerlist',h())[1];
+	$r = curl(host.'easyoffer',h())[1];
 	$offerlist = explode('offerwall/',$r);
 	foreach($offerlist as $a => $list){
 		if($a == 0)continue;
@@ -309,7 +309,7 @@ if($pil == 1){
 	goto menu;
 }elseif($pil == 6){
 	Title("Offerwall [Offers4crypto]");
-	$r = curl(host.'offerlist',h())[1];
+	$r = curl(host.'easyoffer',h())[1];
 	$offerlist = explode('offerwall/',$r);
 	foreach($offerlist as $a => $list){
 		if($a == 0)continue;

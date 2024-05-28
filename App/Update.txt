@@ -3,3 +3,5 @@
 [-] Free -> AutomsOnline
 [-] Free -> Liteonion
 [-] Free -> Claimlitoshi
+
+[*] Apikey -> Faucetbull

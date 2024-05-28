@@ -25,12 +25,11 @@ Class Offerwall {
 		hapus("cookie.txt");
 		while(1){
 			$r = curl($this->host."excentiv",h())[1];
-			
-			$iframe = explode('"',explode('https://excentiv.com/offerwall?',$r)[1])[0];
+			$iframe = explode('"',explode('class="offerwall-iframe" src="',$r)[1])[0];
 			if(!$iframe){
 				return ["status" => 0,"message" => "iframe lose"];
 			}
-			$r = curl('https://excentiv.com/offerwall?'.$iframe, $this->Excentiv_header("excentiv.com"),'',1)[1];
+			$r = curl($iframe, $this->Excentiv_header("excentiv.com"),'',1)[1];
 			$val = explode('"',explode('<button value="',$r)[1])[0];
 			if(!$val)break;
 			$r = curl($val, $this->Excentiv_header("coins-battle.com"),'',1)[1];
