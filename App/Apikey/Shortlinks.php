@@ -2,7 +2,7 @@
 
 Class Shortlinks {
 	function __construct($apikey){
-		$this->host = "https://bpsl06.my.id/";
+		$this->host = "http://api-bintang.my.id";
 		$this->apikey = $apikey;
 	}
 	function check($nama){

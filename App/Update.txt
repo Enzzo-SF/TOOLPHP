@@ -1,7 +1,3 @@
 @Crypto
 
-[-] Free -> AutomsOnline
-[-] Free -> Liteonion
-[-] Free -> Claimlitoshi
-
-[*] Apikey -> Faucetbull
+[*] Apikey -> host api SL
