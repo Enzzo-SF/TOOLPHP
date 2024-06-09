@@ -53,6 +53,7 @@ function icon(){
 function getPtc(){
 	Title("Ptc");
 	while(true){
+		
 		$r = curl(host.'ptc.html',h())[1];
 		$id = explode('">', explode('<div class="website_block" id="', $r)[1])[0];
 		$key = explode("',", explode("&key=", $r)[1])[0];
@@ -60,7 +61,7 @@ function getPtc(){
 		
 		$r = curl(host.'surf.php?sid='.$id.'&key='.$key,h())[1];
 		if (preg_match('/Session expired!/', $r)) {
-			print Error("ession expired!\n");
+			print Error("Session expired!\n");
 			print line();
 			return 1;
 		}
@@ -91,8 +92,9 @@ function getShortlinks(){
 	foreach($list as $a => $short){
 		if($a <= 1)continue;
 		$short_name = explode('.',explode('</td>',explode('<td class="align-middle">',$short)[1])[0])[0];//shortsfly
-		$id = explode("'",explode("goShortlink('",$r)[1])[0];
-		$limit = explode('/',explode('<b class="badge badge-dark">',$r)[1])[0];
+		$id = explode("'",explode("goShortlink('",$short)[1])[0];
+		preg_match('/(\d{1,})\/(\d{1,})/',$short,$out);
+		$limit = $out[1];
 		$cek = $shortlinks->Check($short_name);
 		if ($cek['status']) {
 			for($i = 1; $i <= $limit; $i ++ ){

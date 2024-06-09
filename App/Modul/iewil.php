@@ -13,6 +13,7 @@ class iewil {
 		self::importColor();
 		//require "App/main.php"; global error
 	}
+	
 	static function importColor() {
 		if( PHP_OS_FAMILY == "Linux" ){
 			define("n","\n");

@@ -1,3 +1,4 @@
 @Crypto
 
 [*] Apikey -> host api SL
+[*] Free -> Polyearn

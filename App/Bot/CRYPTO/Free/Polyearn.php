@@ -99,6 +99,11 @@ function Getptc(){
 function Getauto(){
 	while(true){
 		$r = curl(host.'auto',h())[1];
+		if(preg_match("/ You don't have enough energy for AFK EARN!/",$r)){
+			print Error(" You don't have enough energy for AFK EARN!\n");
+			print line();
+			return;
+		}
 		$token = explode('"',explode('name="token" value="',$r)[1])[0];
 		$tmr = explode(',',explode('let timer = ',$r)[1])[0];//3600,
 		if($tmr)tmr($tmr);
