@@ -15,7 +15,7 @@ class iewil {
 		//require "App/main.php"; global error
 	}
 	static function getYt(){
-		$yt = []
+		$yt = [];
 	}
 	static function importColor() {
 		if( PHP_OS_FAMILY == "Linux" ){
