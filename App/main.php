@@ -1,9 +1,7 @@
 <?php
-
 if (!file_exists("Data")) {
 	system("mkdir Data");
 }
-// v-2.3
 if (file_exists("User_Agent")) {
 	$nama_file = "User_Agent";
 	if(PHP_OS_FAMILY == "Windows"){

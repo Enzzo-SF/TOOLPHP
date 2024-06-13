@@ -2,18 +2,21 @@
 
 class iewil {
 	
-	protected $author = "";
-	protected $youtube = "";
+	protected $author;
+	protected $youtube;
 	
 	public function __construct() {
 		$this->author = "iewilmaestro";
-		$this->youtube = "youtube.com/@iewil";
+		$this->youtube = "https://www.youtube.com/@iewil";
 	}
 	static function start() {
 		self::importColor();
+		self::view();
 		//require "App/main.php"; global error
 	}
-	
+	static function getYt(){
+		$yt = []
+	}
 	static function importColor() {
 		if( PHP_OS_FAMILY == "Linux" ){
 			define("n","\n");
@@ -77,6 +80,21 @@ class iewil {
 			return 1;
 		}else{
 			return 0;
+		}
+	}
+	static function view(){
+		$tanggal = date("dmy");
+		$file = "Data/view";
+		$youtube = "https://www.youtube.com/@iewil";
+		if(!file_exists($file)){
+			system("termux-open-url ".$youtube);
+			file_put_contents($file, $tanggal);
+		}else{
+			$cek = file_get_contents($file);
+			if($cek != $tanggal){
+				system("termux-open-url ".$youtube);
+				file_put_contents($file, $tanggal);
+			}
 		}
 	}
 }

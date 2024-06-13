@@ -14,20 +14,15 @@ function h($data=0){
 	return $h;
 }
 function Firewall(){
-	global $api;
 	while(1){
 		$r = curl(host."firewall",h())[1];
 		$csrf = explode('"',explode('name="csrf_token_name" value="',$r)[1])[0];
 		$captcha = explode('"',explode('name="captchaType" value="',$r)[1])[0];
 		$turnstile = explode('"',explode('<div class="cf-turnstile" data-sitekey="',$r)[1])[0];
 		$recap = explode('"',explode('<div class="g-recaptcha" data-sitekey="',$r)[1])[0];
-		if($turnstile){
-			//$cap = $api->Turnstile($turnstile, host."firewall");
-			$data["cf-turnstile-response"] = $cap;
-		}else
 		if($recap){
 			//$cap = $api->RecaptchaV2($recap, host."firewall");
-			$data["g-recaptcha-response"] = $cap;
+			$data["g-recaptcha-response"] = "";
 		}else{
 			continue;
 		}
@@ -148,7 +143,6 @@ while(true){
 			tmr($tmr);
 		}
 		$data = "csrf_token_name=".$csrf."&token=".$hiden."&captcha=recaptchav2&g-recaptcha-response=";
-		print $data;exit;
 		$r = curl(host."faucet/verify/".$coin,h(),$data)[1];
 		$ban = explode('</div>',explode('<div class="alert text-center alert-danger"><i class="fas fa-exclamation-circle"></i> Your account',$r)[1])[0];
 		$ss = explode("account!",explode("html: '0.",$r)[1])[0];
