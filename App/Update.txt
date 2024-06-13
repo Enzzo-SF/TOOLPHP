@@ -1,7 +1,3 @@
 @Crypto
 
-[+] APikey -> LtcminesSite
-
-[*] Apikey -> host api SL
-[*] Free -> Polyearn
-[*] Shortlink -> Sourcecode
+[+] APikey -> Onionfaucet

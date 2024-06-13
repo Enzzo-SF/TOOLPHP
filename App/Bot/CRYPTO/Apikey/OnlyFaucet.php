@@ -156,6 +156,7 @@ while(true){
 		if(preg_match('/sufficient funds/',$r)){
 			$res = his([$coin=>3],$res);
 			print Cetak($coin,"Sufficient funds");
+			print line();
 			continue;
 		}
 		if($ss){
