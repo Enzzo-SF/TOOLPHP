@@ -46,7 +46,7 @@ Cetak('Balance',$r["bal"]);
 print line();
 
 ulang:
-/*
+
 menu('*', "Surfing");
 print line();
 $a = 1;
@@ -123,7 +123,7 @@ while(true){
 	print line();
 	break;
 }
-*/
+
 print m."YouTube...\n";
 print line();
 while(true){
