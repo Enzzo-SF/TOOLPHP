@@ -46,6 +46,7 @@ Cetak('Balance',$r["bal"]);
 print line();
 
 ulang:
+/*
 menu('*', "Surfing");
 print line();
 $a = 1;
@@ -122,14 +123,14 @@ while(true){
 	print line();
 	break;
 }
-
+*/
 print m."YouTube...\n";
 print line();
 while(true){
 	$r = curl(host."work-youtube", h())[1];
-	$id = explode(",",explode("funcjs['start_youtube'](",$r)[1])[0];
+	$id = explode('"',explode('ads_id_',$r)[1])[0];
 	if($id){
-		$hash = explode("'",explode(", '",explode("funcjs['start_youtube'](",$r)[1])[1])[0];
+		$hash = explode("')",explode("hash=",$r)[1])[0];
 		
 		$r = json_decode(curl(host."ajax/earnings/ajax-youtube.php",array_merge(["referer: https://aviso.bz/work-youtube"],h(1)),"id=".$id."&hash=".$hash."&func=ads-start&user_response=&count_captcha_subscribe=&checkStepOneCaptchaSubscribe=false")[1],1);
 		if(explode('<span class="youtube-error">',$r['html'])[1]){
@@ -143,7 +144,7 @@ while(true){
 		
 		Tmr($timer);
 		$data ="hash=$hash_video&report_id=$report_id&task_id=$id&timer=$timer&player_time=$timer.190681877929688&video_id=$video_id&stage=2";
-		$r= json_decode(curl(host."ajax/earnings/ajax-youtube-external.php",array_merge(["referer: https://skyhome.squarespace.com/"],h(1)),$data)[1],1);
+		$r= json_decode(curl(host."ajax/earnings/ajax-youtube-external.php",array_merge(["referer: https://premiumvideoblogs.blogspot.com/"],h(1)),$data)[1],1);
 		$reward = explode('</b>',explode('<b>',$r["html"])[1])[0];
 		
 		Cetak('Reward',$reward);
