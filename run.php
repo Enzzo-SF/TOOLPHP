@@ -1,6 +1,13 @@
 <?php
 
-error_reporting(0);
+if($argv[1]){
+	if($argv[1] == "error"){
+	}else{
+		exit("usage: php ".$argv[0]." error \n");
+	}
+}else{
+	error_reporting(0);
+}
 
 require "App/autoload.php";
 
