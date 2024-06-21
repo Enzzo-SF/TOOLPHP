@@ -1,3 +1,4 @@
-@Ruble
+@Crypto
 
-[*] Free -> AvisoBz
+[*] Free -> Faucetclicksite
+[*] Apikey -> Aruble

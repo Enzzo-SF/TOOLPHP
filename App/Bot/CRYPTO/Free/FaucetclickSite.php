@@ -14,7 +14,7 @@ function h($host = 0){
 
 function dash(){
 	$r = curl(host."dashboard",h())[1];
-	$user = explode('</div>',explode('<div class="font-medium">',$r)[1])[0];
+	$user = explode('</div>',explode('<div class=font-medium>',$r)[1])[0];
 	$bal = explode('</div>',explode('<div class="text-3xl font-medium leading-8 mt-6">',$r)[1])[0];
 	$en = explode('</div>',explode('<div class="text-3xl font-medium leading-8 mt-6">',$r)[3])[0];
 	return ["user"=>$user,"balance"=>$bal,"energy"=>$en];
@@ -40,8 +40,8 @@ function autofaucet(){
 		$r = curl(host."auto",h())[1];
 		$cost = explode('</div>',explode('<div class="text-3xl font-medium leading-8 mt-6">',$r)[2])[0];
 		if(dash()["energy"] < $cost)break;
-		$token = explode('">',explode('<input type="hidden" name="token" value="',$r)[1])[0];
-		$tmr = explode(",",explode("let timer = ",$r)[1])[0];
+		$token = explode('>',explode('name=token value=',$r)[1])[0];
+		$tmr = explode(",",explode("let timer=",$r)[1])[0];
 		if($tmr){tmr($tmr);}
 		$data= "token=".$token;
 		$r = curl(host."auto/verify",h(),$data)[1];
@@ -60,22 +60,22 @@ function autofaucet(){
 function game($game,$id){
 	while(true){
 		$r = curl(host."games/play/".$game,h())[1];
-		$score = explode(";",explode("var required_score = ",$r)[1])[0];
-		$csrf = explode("';",explode("var csrf_hash = '",$r)[1])[0];
+		$score = explode(";",explode("var required_score=",$r)[1])[0];
+		$csrf = explode("';",explode("var csrf='",$r)[1])[0];
 		$data = "score=".$score."&csrf=".$csrf;
 		$arr = ["x-requested-with: XMLHttpRequest"];
 		tmr(10);
-		$r = json_decode(curl(host."games/verify?id=".$id,array_merge($arr,h()),$data)[1],1);
-		if($r["status"] == "success"){
-			print Sukses(explode(",",$r["message"])[0]);
+		$res = curl(host."games/verify?id=".$id,array_merge($arr,h()),$data)[1];
+		if(explode('"status":"success"',$res)[1]){
+			print Sukses(explode(",",explode('"',explode('"message":"',$res)[1])[0])[0]);
 			$r = dash();
 			Cetak("Balance",$r["balance"]);
 			Cetak("Energy",$r["energy"]);
 			print line();
 		}
-		if($r["status"] == "error"){
+		if(explode('"status":"error"',$res)[1]){
 			Cetak("Game",$game);
-			print Error($r["message"].n);
+			print Error(explode('"',explode('"message":"',$res)[1])[0].n);
 			print line();
 			break;
 		}
@@ -141,7 +141,7 @@ function acivement(){
 	foreach($list as $a => $aciv){
 		if($a == 0)continue;
 		$url = explode('"',explode('<form action="',$aciv)[1])[0];
-		$csrf = explode('">',explode('<input type="hidden" name="csrf_token_name" value="',$aciv)[1])[0];
+		$csrf = explode('>',explode('name=csrf_token_name value=',$aciv)[1])[0];
 		$uncomplet = explode('Uncompleted',$aciv)[1];
 		$task = explode('</div>',explode('<div class="text-1xl font-medium leading-8 mt-6">Task: ',$aciv)[1])[0];
 		if($uncomplet)continue;
@@ -169,7 +169,8 @@ function faucet(){
 			Tmr($tmr);continue;
 		}
 		
-		$data = Parsing($r);
+		$data['csrf_token_name'] = explode('>',explode('id=token value=',$r)[1])[0];
+		$data['token'] = explode('>',explode('name=token value=',$r)[1])[0];
 		$data['captcha'] = 'recaptchav2';
 		$data['g-recaptcha-response'] = '';
 		$r = curl(host.'claim/verify',h(),http_build_query($data))[1];
@@ -192,9 +193,9 @@ function ads(){
 		$id = explode("'",explode('ads/view/',$r)[1])[0];
 		if(!$id)break;
 		$r = curl(host.'ads/view/'.$id,h())[1];
-		$tmr = explode(';',explode('var timer = ',$r)[1])[0];
-		$csrf = explode('"',explode('_token_name" value="',$r)[1])[0];
-		$token = explode('"',explode('name="token" value="',$r)[1])[0];
+		$tmr = explode(';',explode('var timer=',$r)[1])[0];
+		$csrf = explode('>',explode('_token_name value=',$r)[1])[0];
+		$token = explode('>',explode('name=token value=',$r)[1])[0];
 		
 		$data = "csrf_token_name=$csrf&token=$token";
 		$arr = ["x-requested-with: XMLHttpRequest"];
@@ -224,18 +225,18 @@ function article(){
 		if(!$id)break;
 		
 		$r = curl(host.'article/view/'.$id,h())[1];
-		$csrf = explode('"',explode('_token_name" value="',$r)[1])[0];
-		$token = explode('"',explode('name="token" value="',$r)[1])[0];
-		$slug = explode('"',explode('name="slug" value="',$r)[1])[0];
+		$csrf = explode('>',explode('_token_name value=',$r)[1])[0];
+		$token = explode('>',explode('name=token value=',$r)[1])[0];
+		$slug = explode('>',explode('name=slug value=',$r)[1])[0];
 		
 		$data = "csrf_token_name=$csrf&token=$token&slug=$slug";
 		$r = curl(host.'articles/antibot',h(),$data)[0];
 		$loc = trim(explode(n, explode('q=',explode('location:', $r)[1])[1])[0]);
 		$arr = ['referer: https://www.google.com/'];
 		$r = curl(urldecode($loc),array_merge($arr,h()))[1];
-		$tmr = explode(';',explode('let timer = ',$r)[1])[0];
+		$tmr = explode(';',explode('let timer=',$r)[1])[0];
 		if($tmr)tmr($tmr);
-		$csrf = explode('"',explode('_token_name" value="',$r)[1])[0];
+		$csrf = explode('>',explode('_token_name value=',$r)[1])[0];
 		$final = explode('"',explode('<form action="',$r)[1])[0];
 		$data = "csrf_token_name=$csrf";
 		$r = curl($final,h(),$data)[1];
@@ -280,10 +281,12 @@ while(true){
 		hapus("Cookie");
 		goto cookie;
 	}
+	
 	game("2048-lite","1");
 	game("pacman-lite","2");
 	game("hextris-lite","3");
 	game("taptaptap","4");
+	
 	ads();
 	article();
 	faucet();
@@ -291,13 +294,14 @@ while(true){
 	autofaucet();
 	tmr(600);
 }
+
 /*
 menu:
-Menu(1, "Game"); ok
-Menu(2, "Faucet"); ok
-Menu(3, "Visit Ptc"); ok
+Menu(1, "Game"); 
+Menu(2, "Faucet"); 
+Menu(3, "Visit Ptc");
 Menu(4, "Auto Faucet");
-Menu(5, "Read Article");ok
+Menu(5, "Read Article");
 Menu(6, "Achievements");
 //Game
 $pil = readline(Isi("Nomor"));

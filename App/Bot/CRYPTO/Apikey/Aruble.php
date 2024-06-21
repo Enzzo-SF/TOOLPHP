@@ -2,7 +2,7 @@
 const
 register_link = "https://aruble.net/?r=01gLwYQYg1",
 host = "https://aruble.net/",
-typeCaptcha = "hcaptcha",
+typeCaptcha = "recaptchaV2",
 youtube = "https://youtube.com/c/iewil";
 
 function h($ref=0){
@@ -96,14 +96,15 @@ while(true){
 	$hidden = explode('"',explode('<input type="hidden" id="',$r)[1])[0];
 	$value = explode("'",explode("$hidden').val('",$r)[1])[0];
 	$ghash = explode("'",explode("ghash').val('",$r)[1])[0];
+	$captcha = explode("<script src='https://www.google.com/recaptcha/api.js?",$r)[1];
 	$hcaptcha = explode("'",explode("<div id='captcha' class='h-captcha' data-sitekey='",$r)[1])[0];
-	if(!$hcaptcha){
+	if(!$captcha){
 		print Error("sitekey error!");
 		sleep(6);
 		print "\r                         \r";
 		continue;
 	}
-	$cap = $api->Hcaptcha($hcaptcha, host."page/faucet/$coin");
+	$cap = $api->RecaptchaV2('6LeYAZ4aAAAAAITBD3YyMA6KTTLRSonhXHLLMIXW', host."page/faucet/$coin");
 	if(!$cap)continue;
 	if(explode('\"',explode('rel=\"',$r)[1])[0]){
 		$atb = $api->AntiBot($r);
