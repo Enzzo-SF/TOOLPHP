@@ -2,3 +2,7 @@
 
 [*] Free -> Faucetclicksite
 [*] Apikey -> Aruble
+
+[+] Apikey -> LiteonionOnline
+
+[-] Apikey -> Onlyfaucet
