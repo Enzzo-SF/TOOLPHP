@@ -22,7 +22,7 @@ Cetak("Register",register_link);
 print line();
 if(!Simpan("Cookie"))print "\n".line();
 if(!ua())print "\n".line();
-
+/*
 if(!$cek_api_input){
 	$apikey = MenuApi();
 	if(provider_api == "Multibot"){
@@ -32,7 +32,7 @@ if(!$cek_api_input){
 	}
 	$cek_api_input = 1;
 }
-
+*/
 print p."Jangan lupa \033[101m\033[1;37m Subscribe! \033[0m youtub saya :D";sleep(2);
 //system("termux-open-url ".youtube);
 Ban(1);
@@ -40,6 +40,7 @@ Ban(1);
 $r = dash();
 if(!$r["user"]){
 	print Error("Session expired".n);
+	hapus("cookie.txt");
 	hapus("Cookie");
 	sleep(3);
 	print line();
@@ -47,7 +48,7 @@ if(!$r["user"]){
 }
 
 Cetak("Email",$r["user"]);
-Cetak("Bal_Api",$api->getBalance());
+//Cetak("Bal_Api",$api->getBalance());
 print line();
 menu:
 Menu(1,"Claim Faucet");
@@ -55,16 +56,20 @@ Menu(2,"Update Cookie");
 $pil = readline(Isi("Number"));
 print line();
 if($pil == 2){
+	hapus("cookie.txt");
 	hapus("Cookie");
 	Simpan("Cookie");
 	goto cookie;
 }
+
+
 gaslagi:
 $r = curl(host.'faucet.php',h())[1];
 $cek = GlobalCheck($r);
 if($cek['cf']){
 	print Error("Cloudflare Detect\n");
 	hapus("Cookie");
+	sleep(3);
 	print line();
 	goto cookie;
 }
@@ -88,8 +93,16 @@ foreach($list_coin as $a => $coins){
 		$match[$datax[2][$i]] = $datax[3][$i];
 	}
 	$data = http_build_query($match);
+	
 	$r = curl(host.'captha.php',h(),$data)[1];
 	$direc = explode('"',explode('<form method="post" action="',$r)[1])[0];
+	preg_match_all('/(input:?.*?)name=\"(.*?)\" value=\"([^"]+)"/is',$r,$datax);
+	$match=[];
+	for($i = 0;$i<count($datax[2]);$i++){
+		$match[$datax[2][$i]] = $datax[3][$i];
+	}
+	
+	/* OLD
 	$sitekey = explode('"',explode('<div class="g-recaptcha" data-sitekey="',$r)[1])[0];
 	preg_match_all('/(input:?.*?)name=\"(.*?)\" value=\"([^"]+)"/is',$r,$datax);
 	$match=[];
@@ -107,6 +120,18 @@ foreach($list_coin as $a => $coins){
 	}
 	if(!$cap)continue;
 	$data = http_build_query($match);
+	*/
+	
+	# NEW
+	tmr(7);
+	$r = json_decode(curl(host.'challenge.php',h())[1],1);
+	$signature = $r['signature'];
+	$salt = $r['salt'];
+	$challenge = $r['challenge'];
+	$altcha = @Captcha::altcha($signature, $salt, $challenge);
+	$match['altcha'] = $altcha;
+	$data = http_build_query($match);
+	
 	$r = curl(host.$direc,h(),$data)[1];
 	if(preg_match('/does not have sufficient/',$r)){
 		print c.strtoupper($coint).": ".Error(" The faucet does not have sufficient funds\n");
@@ -116,9 +141,16 @@ foreach($list_coin as $a => $coins){
 	$ss = trim(explode('at ',explode('</div>',explode('<div class="message-body">',$r)[1])[0])[0]);
 	$dg = trim(explode('<a',explode('<div class="message-header">',explode('<article class="message is-danger">',$r)[1])[1])[0]);
 	$wr = trim(explode('</div>',explode('<div class="message-header">',explode('<article class="message is-warning">',$r)[1])[1])[0]);
+	if(preg_match("/Login or Register/",$r)){
+		print Error("Session expired\n");
+		hapus("Cookie");
+		sleep(3);
+		print line();
+		goto cookie;
+	}
 	if($ss){
 		Cetak($match['claim_crypto'],$ss);
-		Cetak("Bal_Api",$api->getBalance());
+		//Cetak("Bal_Api",$api->getBalance());
 		$res = his([$coint=>1],$res);
 		print line();
 	}elseif($dg){
@@ -132,6 +164,7 @@ foreach($list_coin as $a => $coins){
 		$res = his([$coint=>1],$res);
 		print line();
 	}else{
+		
 	}
 }
 Tmr(300);

@@ -1,5 +1,4 @@
 <?php
-//exit(Error('proses!\n'));
 const
 host = "https://bagi.co.in/",
 register_link = "https://bagi.co.in/?ref=2684",
@@ -23,7 +22,7 @@ Cetak("Register",register_link);
 print line();
 if(!Simpan("Cookie"))print "\n".line();
 if(!ua())print "\n".line();
-
+/*
 if(!$cek_api_input){
 	$apikey = MenuApi();
 	if(provider_api == "Multibot"){
@@ -33,7 +32,7 @@ if(!$cek_api_input){
 	}
 	$cek_api_input = 1;
 }
-
+*/
 print p."Jangan lupa \033[101m\033[1;37m Subscribe! \033[0m youtub saya :D";sleep(2);
 //system("termux-open-url ".youtube);
 Ban(1);
@@ -49,7 +48,7 @@ if(!$r["user"]){
 }
 
 Cetak("Email",$r["user"]);
-Cetak("Bal_Api",$api->getBalance());
+//Cetak("Bal_Api",$api->getBalance());
 print line();
 menu:
 Menu(1,"Claim Faucet");
@@ -142,9 +141,16 @@ foreach($list_coin as $a => $coins){
 	$ss = trim(explode('at ',explode('</div>',explode('<div class="message-body">',$r)[1])[0])[0]);
 	$dg = trim(explode('<a',explode('<div class="message-header">',explode('<article class="message is-danger">',$r)[1])[1])[0]);
 	$wr = trim(explode('</div>',explode('<div class="message-header">',explode('<article class="message is-warning">',$r)[1])[1])[0]);
+	if(preg_match("/Login or Register/",$r)){
+		print Error("Session expired\n");
+		hapus("Cookie");
+		sleep(3);
+		print line();
+		goto cookie;
+	}
 	if($ss){
 		Cetak($match['claim_crypto'],$ss);
-		Cetak("Bal_Api",$api->getBalance());
+		//Cetak("Bal_Api",$api->getBalance());
 		$res = his([$coint=>1],$res);
 		print line();
 	}elseif($dg){
@@ -158,8 +164,7 @@ foreach($list_coin as $a => $coins){
 		$res = his([$coint=>1],$res);
 		print line();
 	}else{
-		print_r(explode('<div class="message-body">',$r));
-		exit;
+		
 	}
 }
 Tmr(300);
