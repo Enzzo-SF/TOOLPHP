@@ -23,4 +23,15 @@ Class Captcha{
 		if(!$cap['status'])return 0;
 		return $cap;
 	}
+	static function altcha($signature, $salt, $challenge){
+		$data["apikey"] = "iewil";
+		$data["methode"] = "altcha";
+		$data['signature'] = $signature;
+		$data['salt'] = $salt;
+		$data['challenge'] = $challenge;
+		$data = http_build_query($data);
+		$cap = json_decode(curl("https://iewilbot.my.id/res.php",0,$data)[1],1);
+		if(!$cap['status'])return 0;
+		return $cap['result'];
+	}
 }

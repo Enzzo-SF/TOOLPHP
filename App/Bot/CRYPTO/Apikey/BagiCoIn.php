@@ -1,4 +1,5 @@
 <?php
+exit(Error('proses!\n'));
 const
 host = "https://bagi.co.in/",
 register_link = "https://bagi.co.in/?ref=2684",
@@ -93,8 +94,16 @@ foreach($list_coin as $a => $coins){
 		$match[$datax[2][$i]] = $datax[3][$i];
 	}
 	$data = http_build_query($match);
+	
 	$r = curl(host.'captha.php',h(),$data)[1];
 	$direc = explode('"',explode('<form method="post" action="',$r)[1])[0];
+	preg_match_all('/(input:?.*?)name=\"(.*?)\" value=\"([^"]+)"/is',$r,$datax);
+	$match=[];
+	for($i = 0;$i<count($datax[2]);$i++){
+		$match[$datax[2][$i]] = $datax[3][$i];
+	}
+	
+	/* OLD
 	$sitekey = explode('"',explode('<div class="g-recaptcha" data-sitekey="',$r)[1])[0];
 	preg_match_all('/(input:?.*?)name=\"(.*?)\" value=\"([^"]+)"/is',$r,$datax);
 	$match=[];
@@ -112,6 +121,19 @@ foreach($list_coin as $a => $coins){
 	}
 	if(!$cap)continue;
 	$data = http_build_query($match);
+	*/
+	
+	# NEW
+	
+	$r = json_decode(curl('https://bagi.co.in/challenge.php',h())[1],1);
+	$signature = $r['signature'];
+	$salt = $r['salt'];
+	$challenge = $r['challenge'];
+	$altcha = @Captcha::altcha($signature, $salt, $challenge);
+	$match['altcha'] = $altcha;
+	
+	$data = http_build_query($match);
+	
 	$r = curl(host.$direc,h(),$data)[1];
 	if(preg_match('/does not have sufficient/',$r)){
 		print c.strtoupper($coint).": ".Error(" The faucet does not have sufficient funds\n");
@@ -137,6 +159,8 @@ foreach($list_coin as $a => $coins){
 		$res = his([$coint=>1],$res);
 		print line();
 	}else{
+		print_r(explode('<div class="message-body">',$r));
+		exit;
 	}
 }
 Tmr(300);
