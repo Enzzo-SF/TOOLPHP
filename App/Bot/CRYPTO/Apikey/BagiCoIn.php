@@ -1,5 +1,5 @@
 <?php
-exit(Error('proses!\n'));
+//exit(Error('proses!\n'));
 const
 host = "https://bagi.co.in/",
 register_link = "https://bagi.co.in/?ref=2684",
@@ -124,14 +124,13 @@ foreach($list_coin as $a => $coins){
 	*/
 	
 	# NEW
-	
+	tmr(7);
 	$r = json_decode(curl('https://bagi.co.in/challenge.php',h())[1],1);
 	$signature = $r['signature'];
 	$salt = $r['salt'];
 	$challenge = $r['challenge'];
 	$altcha = @Captcha::altcha($signature, $salt, $challenge);
 	$match['altcha'] = $altcha;
-	
 	$data = http_build_query($match);
 	
 	$r = curl(host.$direc,h(),$data)[1];

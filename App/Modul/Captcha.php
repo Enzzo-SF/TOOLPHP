@@ -19,7 +19,7 @@ Class Captcha{
 		$data["methode"] = "gp";
 		$data["main"] = base64_encode($src);
 		$data = http_build_query($data);
-		$cap = json_decode(curl("https://iewilbot.my.id/res.php",0,$data)[1],1);
+		$cap = json_decode(curl("https://iewilbot.my.id/goblok/res.php",0,$data)[1],1);
 		if(!$cap['status'])return 0;
 		return $cap;
 	}
