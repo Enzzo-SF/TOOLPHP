@@ -89,6 +89,52 @@ function getFaucet(){
 		}
 	}
 }
+function getAutoclaim(){
+	print h.'['.k.'payout'.h.']'.n;
+	print h.'['.k.'1'.h.']'.k.' Coins'.n;
+	print h.'['.k.'2'.h.']'.k.' Faucetpay'.n;
+	trim($payout = readline('input angka: '));
+	print n;
+
+	print h.'['.k.'Frequency'.h.']'.n;
+	print h.'['.k.'1'.h.']'.k.' 2 Minutes'.n;
+	print h.'['.k.'2'.h.']'.k.' 5 Minutes'.n;
+	print h.'['.k.'3'.h.']'.k.' 10 Minutes'.n;
+	print h.'['.k.'4'.h.']'.k.' 15 Minutes'.n;
+	print h.'['.k.'5'.h.']'.k.' 20 Minutes'.n;
+	trim($frequency = readline('input number: '));
+	print n;
+	print h.'['.k.'Multiplier'.h.']'.n;
+	print h.'['.k.'1'.h.']'.k.' X1'.n;
+	print h.'['.k.'2'.h.']'.k.' X2'.n;
+	print h.'['.k.'3'.h.']'.k.' X3'.n;
+	print h.'['.k.'4'.h.']'.k.' X4'.n;
+	print h.'['.k.'5'.h.']'.k.' X5'.n;
+	trim($x = readline('input number: '));
+	print n;
+	
+	$r = curl(host.'faucet.html', h())[1];
+	$token = explode('|',explode('calcEarnings|POST|',$r)[1])[0];
+	$r = json_decode(curl(host.'system/ajax.php?a=calcEarnings&token='.$token.'&payout='.$payout.'&frequency='.$frequency.'&boost='.$x, h())[1],1);
+	print_r($r);exit
+	$notice = explode('<', explode('<div class="alert alert-info" role="alert">', $r2->message)[1])[0];
+    print k.$notice.n;
+    garis($notice);
+    while (true) {
+        $data = 'a=startClaim&token=' . $token . '&payout=' . $payout . '&frequency=' . $frequency . '&boost=' . $x;
+        $r3 = json_decode(curl(host . 'system/ajax.php', h(), $data)[1], 1)['status'];
+        $t = explode(' minutes', explode('account every ', $r2->message)[1])[0];
+        $data = 'a=validateClaim&token=' . $token;
+        timer($t * 60);
+        $res = json_decode(curl(host . 'system/ajax.php', h(1), $data)[1]);
+        if ($res->status == 200) {
+            $msg = explode('!', explode('<i class="fas fa-check-circle"></i>', $res->message)[1])[0];
+            print h . trim($msg) . n;
+            print h . 'Token ' . m . '-> ' . k . dash()['token'] . k . ' / ' . h . 'Coins ' . m . '-> ' . k . dash()['balance'] . n;
+            print n;
+        }
+    }
+}
 Ban(1);
 cookie:
 Cetak("Register",register_link);
@@ -126,6 +172,7 @@ print line();
 menu:
 Menu(1, "Ptc");
 Menu(2, "Faucet");
+Menu(3, "AutoClaim");
 $pil = readline(Isi("Number"));
 print line();
 if($pil == 1){
@@ -134,6 +181,8 @@ if($pil == 1){
 }elseif($pil == 2){
 	getFaucet();
 	goto menu;
+}elseif($pil == 3){
+	exit("proses");
 }else{
 	print Error("Bad Number\n");
 	print line();
