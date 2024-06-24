@@ -4,6 +4,15 @@
 @Crypto
 [*] Apikey -> KeranCo
 [*] Apikey -> BagiCoIn
+[*] Apikey -> Daycash
 
 [-] Apikey -> AutofaucetTop
 [-] Apikey -> BitstepPro
+
+[+] Free -> Maticfree
+[+] Free -> Bnbfe
+[+] Free -> Freebnbnow
+[+] Free -> Miningsol
+[+] Free -> Tronths
+[+] Free -> Autobitcositeplus
+[+] Apikey -> Bitcositeplus

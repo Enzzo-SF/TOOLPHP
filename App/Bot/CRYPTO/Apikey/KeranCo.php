@@ -167,5 +167,5 @@ foreach($list_coin as $a => $coins){
 		
 	}
 }
-Tmr(300);
+Tmr(600);
 goto gaslagi;
