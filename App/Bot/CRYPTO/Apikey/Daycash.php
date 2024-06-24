@@ -17,8 +17,25 @@ function h($xml = 0, $img = 0){
 	$h[]	= "user-agent: ".ua();
 	return $h;
 }
+function Internal($url, $h = 0, $p = 0){
+	while(1){
+		if($p){
+			$r = curl($url, $h, $p);
+		}else{
+			$r = curl($url, $h);
+		}
+		if($r[1] == "error code: 520"){
+			print m."520: Internal server Error";
+			sleep(3);
+			print "\r                           \r";
+			continue;
+		}else{
+			return $r;
+		}
+	}
+}
 function GetDashboard(){
-	$r = curl(host.'faucet.html', h())[1];
+	$r = Internal(host.'faucet.html', h())[1];
 	$data['user'] = explode('</a>', explode('<a href="/membership.html" class="text-success">', $r)[1])[0];
 	$data['balance'] = explode('</b>', explode('<b id="sidebarCoins">', $r)[1])[0];
 	$data['token'] = explode('</b>', explode('<div class="text-success"><b>', $r)[1])[0];
@@ -28,14 +45,14 @@ function GetDashboard(){
 function getPtc(){
 	Title("Ptc");
 	while(true){
-		$r = curl(host.'ptc.html',h())[1];
+		$r = Internal(host.'ptc.html',h())[1];
 		$id = explode('">', explode('<div class="website_block" id="', $r)[1])[0];
 		$key = explode("',", explode("&key=", $r)[1])[0];
 		if(!$id)break;
 		
-		$r = curl(host.'surf.php?sid='.$id.'&key='.$key,h())[1];
+		$r = Internal(host.'surf.php?sid='.$id.'&key='.$key,h())[1];
 		if (preg_match('/Session expired!/', $r)) {
-			print Error("ession expired!\n");
+			print Error("Session expired!\n");
 			print line();
 			return 1;
 		}
@@ -46,7 +63,7 @@ function getPtc(){
 		
 		$cap = @Captcha::icon();
 		$data = "a=proccessPTC&data=".$id."&token=".$token."&captcha-idhf=0&captcha-hf=".$cap;
-		$r = json_decode(curl(host.'system/ajax.php', h(1), $data)[1], 1);
+		$r = json_decode(Internal(host.'system/ajax.php', h(1), $data)[1], 1);
 		if ($r['status'] == 200) {
 			print Sukses(trim(strip_tags($r['message'])));
 			$r = GetDashboard();
@@ -62,7 +79,7 @@ function getFaucet(){
 	global $api;
 	Title("Faucet");
 	while(true){
-		$r = curl(host.'roll.html', h())[1];
+		$r = Internal(host.'roll.html', h())[1];
 		$sl = explode(' more', explode('<br/>You must visit ', $r)[1])[0];
 		if (preg_match('/You must visit/', $r)) {
 			exit(Error("Visit $sl Shortlinks to be able to Roll\n"));
@@ -80,7 +97,7 @@ function getFaucet(){
 		$cap = $api->RecaptchaV2($recaptcha, host.'faucet.html');
 		if(!$cap)continue;
 		$data = 'a=getBonusRoll&token='.$token.'&captcha=1&challenge=false&response='.$cap;
-		$r = json_decode(Curl(host.'system/ajax.php', h(1), $data)[1], 1);
+		$r = json_decode(Internal(host.'system/ajax.php', h(1), $data)[1], 1);
 		if ($r['status'] == 200) {
 			print Sukses(str_replace([" Congratulations, your ","was","and you won"],["","->","->"],strip_tags($r["message"])));
 			$r = GetDashboard();
@@ -90,48 +107,71 @@ function getFaucet(){
 	}
 }
 function getAutoclaim(){
-	print h.'['.k.'payout'.h.']'.n;
-	print h.'['.k.'1'.h.']'.k.' Coins'.n;
-	print h.'['.k.'2'.h.']'.k.' Faucetpay'.n;
-	trim($payout = readline('input angka: '));
-	print n;
+	Title('payout');
+	Menu(1, 'Coins');
+	Menu(2, 'Faucetpay');
+	$payout = readline(Isi('Number'));
+	print line();
 
-	print h.'['.k.'Frequency'.h.']'.n;
-	print h.'['.k.'1'.h.']'.k.' 2 Minutes'.n;
-	print h.'['.k.'2'.h.']'.k.' 5 Minutes'.n;
-	print h.'['.k.'3'.h.']'.k.' 10 Minutes'.n;
-	print h.'['.k.'4'.h.']'.k.' 15 Minutes'.n;
-	print h.'['.k.'5'.h.']'.k.' 20 Minutes'.n;
-	trim($frequency = readline('input number: '));
-	print n;
-	print h.'['.k.'Multiplier'.h.']'.n;
-	print h.'['.k.'1'.h.']'.k.' X1'.n;
-	print h.'['.k.'2'.h.']'.k.' X2'.n;
-	print h.'['.k.'3'.h.']'.k.' X3'.n;
-	print h.'['.k.'4'.h.']'.k.' X4'.n;
-	print h.'['.k.'5'.h.']'.k.' X5'.n;
-	trim($x = readline('input number: '));
-	print n;
+	Title('Frequency');
+	Menu(1, '2 Minutes');
+	Menu(2, '5 Minutes');
+	Menu(3, '10 Minutes');
+	Menu(4, '15 Minutes');
+	Menu(5, '20 Minutes');
+	$frequency = readline(Isi('Number'));
+	print line();
 	
-	$r = curl(host.'faucet.html', h())[1];
-	$token = explode('|',explode('calcEarnings|POST|',$r)[1])[0];
-	$r = json_decode(curl(host.'system/ajax.php?a=calcEarnings&token='.$token.'&payout='.$payout.'&frequency='.$frequency.'&boost='.$x, h())[1],1);
-	print_r($r);exit
-	$notice = explode('<', explode('<div class="alert alert-info" role="alert">', $r2->message)[1])[0];
-    print k.$notice.n;
-    garis($notice);
-    while (true) {
-        $data = 'a=startClaim&token=' . $token . '&payout=' . $payout . '&frequency=' . $frequency . '&boost=' . $x;
-        $r3 = json_decode(curl(host . 'system/ajax.php', h(), $data)[1], 1)['status'];
-        $t = explode(' minutes', explode('account every ', $r2->message)[1])[0];
-        $data = 'a=validateClaim&token=' . $token;
-        timer($t * 60);
-        $res = json_decode(curl(host . 'system/ajax.php', h(1), $data)[1]);
+	Title('Multiplier');
+	Menu(1, 'x1');
+	Menu(2, 'x2');
+	Menu(3, 'x3');
+	Menu(4, 'x4');
+	Menu(5, 'x5');
+	$x = readline(Isi('Number'));
+	print line();
+	
+	while(true){
+		$r = Internal(host.'faucet.html', h())[1];
+		$token = explode('|',explode('calcEarnings|POST|',$r)[1])[0];
+		if(!$token)continue;
+		$r = json_decode(Internal(host.'system/ajax.php?a=calcEarnings&token='.$token.'&payout='.trim($payout).'&frequency='.trim($frequency).'&boost='.trim($x), h())[1],1);
+		if($r["status"] == 200){
+			//$notice = strip_tags($r["message"]);
+			$tmr = explode(' minutes', explode('account every ', $r["message"])[1])[0];
+			//print sukses($notice);
+			//print line();
+			//break;
+		}elseif(!$r["status"]){
+			$sesi = "Session expired";
+			if(preg_match("/$sesi/", $r["message"])){
+				return;
+			}
+			print_r($r);
+			exit;
+		}else{
+			print_r($r);
+			continue;
+		}
+		
+		$data = 'a=startClaim&token='.$token.'&payout='.trim($payout).'&frequency='.trim($frequency).'&boost='.trim($x);
+		$r = json_decode(Internal(host . 'system/ajax.php', h(), $data)[1],1);
+		if(preg_match("/You don't have enough Faucet Tokens!/", $r["message"])){
+			print Error("You don't have enough Faucet Tokens!\n");
+			print line();
+			return 1;
+		}
+        
+        $data = 'a=validateClaim&token='.$token;
+        tmr($tmr * 60);
+        $res = json_decode(Internal(host . 'system/ajax.php', h(1), $data)[1]);
         if ($res->status == 200) {
             $msg = explode('!', explode('<i class="fas fa-check-circle"></i>', $res->message)[1])[0];
-            print h . trim($msg) . n;
-            print h . 'Token ' . m . '-> ' . k . dash()['token'] . k . ' / ' . h . 'Coins ' . m . '-> ' . k . dash()['balance'] . n;
-            print n;
+            print sukses(trim($msg));
+            $r = GetDashboard();
+			Cetak("Token",$r["token"]);
+			Cetak("Balance",$r["balance"].'-'.$r["bits"]);
+			print line();
         }
     }
 }
@@ -182,7 +222,8 @@ if($pil == 1){
 	getFaucet();
 	goto menu;
 }elseif($pil == 3){
-	exit("proses");
+	if(!getAutoclaim())goto cookie;
+	goto menu;
 }else{
 	print Error("Bad Number\n");
 	print line();
