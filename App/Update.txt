@@ -1,8 +1,9 @@
+@Ruble
+[*] AvisoBz
+
 @Crypto
+[*] Apikey -> KeranCo
+[*] Apikey -> BagiCoIn
 
-[*] Free -> Faucetclicksite
-[*] Apikey -> Aruble
-
-[+] Apikey -> LiteonionOnline
-
-[-] Apikey -> Onlyfaucet
+[-] Apikey -> AutofaucetTop
+[-] Apikey -> BitstepPro
