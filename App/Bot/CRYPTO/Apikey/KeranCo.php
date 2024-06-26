@@ -64,6 +64,15 @@ if($pil == 2){
 
 
 gaslagi:
+$r = dash();
+if(!$r["user"]){
+	print Error("Session expired".n);
+	hapus("cookie.txt");
+	hapus("Cookie");
+	sleep(3);
+	print line();
+	goto cookie;
+}
 $r = curl(host.'faucet.php',h())[1];
 $cek = GlobalCheck($r);
 if($cek['cf']){
