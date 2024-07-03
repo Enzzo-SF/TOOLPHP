@@ -2,7 +2,7 @@
 
 Class Shortlinks {
 	function __construct($apikey){
-		$this->host = "http://api-bintang.my.id";
+		$this->host = "http://api-xnoxs.my.id";
 		$this->apikey = $apikey;
 	}
 	function check($nama){
@@ -14,16 +14,16 @@ Class Shortlinks {
 			"urlsfly" => "fly",
 			"wefly" => "fly",
 			"clicksflyme" => "fly",
-			//"linksly" => "linksly",
-			//"adcorto" => "adcorto",
-			//"c2g" => "C2G",
-			//"shrinkme" => "ShrinkMe",
-			//"shrkearn" => "ShrkEarn",
+			"linksly" => "linksly",
+			"adcorto" => "adcorto",
+			"c2g" => "C2G",
+			"shrinkme" => "ShrinkMe",
+			"shrkearn" => "ShrkEarn",
 			"urlhives" => "UrlHives",
 			"linkhives" =>"LinkHives",
-			//"shortsme" => "shortsme",
-			//"adlink" => "adlink",
-			//"ez4short" => "ez4short"
+			"shortsme" => "shortsme",
+			"adlink" => "adlink",
+			"ez4short" => "ez4short"
 		];
 		sleep(2);
 		$filter = $supported[$check];

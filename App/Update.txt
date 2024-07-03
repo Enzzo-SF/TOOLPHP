@@ -1,18 +1,6 @@
-@Ruble
-[*] AvisoBz
-
 @Crypto
-[*] Apikey -> KeranCo
-[*] Apikey -> BagiCoIn
-[*] Apikey -> Daycash
 
-[-] Apikey -> AutofaucetTop
-[-] Apikey -> BitstepPro
+[-] Free -> Ltchunt
+[-] Apikey -> FreeusdClick
 
-[+] Free -> Maticfree
-[+] Free -> Bnbfe
-[+] Free -> Freebnbnow
-[+] Free -> Miningsol
-[+] Free -> Tronths
-[+] Free -> Autobitcositeplus
-[+] Apikey -> Bitcositeplus
+[+] Apikey -> BtcfaucetIn
