@@ -1,6 +1,3 @@
 @Crypto
 
-[-] Free -> Ltchunt
-[-] Apikey -> FreeusdClick
-
-[+] Apikey -> BtcfaucetIn
+[+] Apikey -> AdbeastOrg
