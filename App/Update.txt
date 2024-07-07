@@ -1,3 +1,10 @@
 @Crypto
 
+[*] Apikey -> Coinmasters
+
 [+] Apikey -> AdbeastOrg
+[+] Apikey -> Faucetgame
+
+[-] Free -> Autobitcositeplus
+[-] Apikey -> Bitcositeplus
+[-] Apikey -> BtcfaucetIn

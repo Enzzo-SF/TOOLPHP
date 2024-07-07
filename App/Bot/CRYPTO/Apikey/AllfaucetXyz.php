@@ -138,6 +138,7 @@ Cetak("Register",register_link);
 print line();
 if(!Simpan("Cookie"))print "\n".line();
 if(!ua())print "\n".line();
+exit(Error("script on progress\n"));
 
 if(!$cek_api_input){
 	$apikey = MenuApi();
