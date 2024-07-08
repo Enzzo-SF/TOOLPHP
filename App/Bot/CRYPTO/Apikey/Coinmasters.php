@@ -129,7 +129,7 @@ function GetFaucet($patch){
 			$data = "csrf_token_name=".$csrf.$datacap;
 		}
 		$r = curl(host.$patch."/claim", h(), $data)[1];
-		$ss = explode(".'", explode("Swal.fire('Info', '", $r)[1])[0];
+		$ss = explode("</p>", explode('<p class="mb-0 text-start text3" style="color:#fff;"> ', $r)[1])[0];
 		if($ss){
 			Cetak("Sukses",$ss);
 			$r = GetDashboard();
@@ -192,8 +192,8 @@ function GetPtc(){
 		
 		if(!$cap)continue;
 		$data = $datacap.'csrf_token_name='.$csrf;
-		$r = curl(host.'ptccopy/verify/'.$id,h(),$data)[1];
-		$ss = explode("'", explode("Swal.fire('Info', '", $r)[1])[0];
+		$r = curl(host.'ptc/verify/'.$id,h(),$data)[1];
+		$ss = explode("</p>", explode('<p class="mb-0 text-start text3" style="color:#fff;"> ', $r)[1])[0];
 		print "\r             \r";
 		if($ss) {
 			Cetak("Sukses",$ss);
@@ -250,7 +250,7 @@ function shortlink(){
 							hapus("Cookie");
 							return 1;
 						}
-						$ss = explode("'", explode("Swal.fire('Info', '", $r)[1])[0];
+						$ss = explode("</p>", explode('<p class="mb-0 text-start text3" style="color:#fff;"> ', $r)[1])[0];
 						if($ss){
 							Cetak("Sukses",$ss);
 							$r = GetDashboard();
