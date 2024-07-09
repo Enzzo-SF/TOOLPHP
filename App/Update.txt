@@ -1,10 +1,9 @@
+@Ruble
+[-] Free -> AvisoBz
+
 @Crypto
 
-[*] Apikey -> Coinmasters
+[*] Apikey -> BagicoIn
+[*] Apikey -> KeranCo
 
-[+] Apikey -> AdbeastOrg
-[+] Apikey -> Faucetgame
-
-[-] Free -> Autobitcositeplus
-[-] Apikey -> Bitcositeplus
-[-] Apikey -> BtcfaucetIn
+[+] Apikey -> MulticryptoSite

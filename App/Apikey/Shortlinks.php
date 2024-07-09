@@ -16,14 +16,18 @@ Class Shortlinks {
 			"clicksflyme" => "fly",
 			"linksly" => "linksly",
 			"adcorto" => "adcorto",
-			"c2g" => "C2G",
-			"shrinkme" => "ShrinkMe",
-			"shrkearn" => "ShrkEarn",
-			"urlhives" => "UrlHives",
-			"linkhives" =>"LinkHives",
+			"c2g" => "c2g",
+			"shrinkme" => "shrinkme",
+			"shrkearn" => "shrinkearn",
+			"urlhives" => "urlhives",
+			"linkhives" =>"linkhives",
 			"shortsme" => "shortsme",
 			"adlink" => "adlink",
-			"ez4short" => "ez4short"
+			"revcut" => "revcut",
+			"bitad" => "bitad",
+			"urlcut" => "urlcut",
+			"cutlink" => "cutlink",
+			"msshort" => "msshort"
 		];
 		sleep(2);
 		$filter = $supported[$check];
@@ -48,6 +52,7 @@ Class Shortlinks {
 			),
 			true
 		);
+		
 		if($r['status'] == "success"){
 			return $r;
 		}else{

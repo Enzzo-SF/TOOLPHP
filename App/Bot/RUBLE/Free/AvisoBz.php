@@ -128,6 +128,7 @@ print m."YouTube...\n";
 print line();
 while(true){
 	$r = curl(host."work-youtube", h())[1];
+	$referer = explode('">',explode('id="domain-squarespace" type="hidden" value="',$r)[1])[0];//https://premiumvideoblog.blogspot.com
 	$id = explode('"',explode('ads_id_',$r)[1])[0];
 	if($id){
 		$hash = explode("')",explode("hash=",$r)[1])[0];
@@ -144,7 +145,7 @@ while(true){
 		
 		Tmr($timer);
 		$data ="hash=$hash_video&report_id=$report_id&task_id=$id&timer=$timer&player_time=$timer.190681877929688&video_id=$video_id&stage=2";
-		$r= json_decode(curl(host."ajax/earnings/ajax-youtube-external.php",array_merge(["referer: https://premiumtwblog.blogspot.com/"],h(1)),$data)[1],1);
+		$r= json_decode(curl(host."ajax/earnings/ajax-youtube-external.php",array_merge(["referer: $referer"],h(1)),$data)[1],1);
 		$reward = explode('</b>',explode('<b>',$r["html"])[1])[0];
 		
 		Cetak('Reward',$reward);

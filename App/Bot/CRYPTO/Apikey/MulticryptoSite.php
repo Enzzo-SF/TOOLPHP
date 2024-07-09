@@ -1,7 +1,7 @@
 <?php
 const
-register_link = "https://ltcmines.site/earns/doge/?r=18jswG2t9EZrnHju5dyiYw1yGbkcrTSgJg",
-host = "https://ltcmines.site/",
+register_link = "https://multicrypto.site/wts/ethereum/?r=purna.iera@gmail.com",
+host = "https://multicrypto.site/",
 typeCaptcha = "RecaptchaV2",
 youtube = "https://youtube.com/c/iewil",
 r = "/?r=purna.iera@gmail.com";
@@ -44,14 +44,13 @@ print p."Jangan lupa \033[101m\033[1;37m Subscribe! \033[0m youtub saya :D";slee
 Ban(1);
 hapus("cookie.txt");
 
-menu:
-$r = Curl(host.'earns',h())[1];
+
+$r = Curl(host.'wts',h())[1];
 $con = explode('<div class="col-lg-4 col-sm-6">',$r);
 foreach($con as $a=> $coins){
 	if($a == 0)continue;
-	$coin = explode('"',explode('/earns/',$coins)[2])[0];
+	$coin = explode('"',explode('/wts/',$coins)[2])[0];
 	$coinx[$a] = $coin;
-	print Menu($a,strtoupper($coin));
 }
 
 Ban(1);
@@ -64,7 +63,7 @@ while(true){
 		if($res){
 			if($res[$coin] > 2)continue;
 		}
-		$r = curl("https://ltcmines.site/earns/".$coin.r,h(),'',1)[1];
+		$r = curl(host."wts/".$coin.r,h(),'',1)[1];
 		if(preg_match('/You have to wait/',$r)){
 			$res = his([$coin=>1],$res);
 			continue;
@@ -80,15 +79,15 @@ while(true){
 		if(explode('\"',explode('rel=\"',$r)[1])[0]){
 			$atb = $api->AntiBot($r);
 			if(!$atb)continue;
-			$cap = $api->RecaptchaV2($sitekey, "https://ltcmines.site/earns/".$coin.r);
+			$cap = $api->RecaptchaV2($sitekey, host."wts/".$coin.r);
 			if(!$cap)continue;
 			$data = "session-token=".$sesion."&address=".urlencode($email)."&antibotlinks=".$atb."&captcha=recaptcha&g-recaptcha-response=".$cap."&login=Verify+Captcha";
 		}else{
-			$cap = $api->RecaptchaV2($sitekey, "https://ltcmines.site/earns/".$coin.r);
+			$cap = $api->RecaptchaV2($sitekey, host."wts/".$coin.r);
 			if(!$cap)continue;
-			$data = "session-token=".$sesion."&address=".urlencode($email)."&captcha=recaptcha&g-recaptcha-response=".$cap."&login=Verify+Captcha";
+			$data = "session-token=".$sesion."&address=".urlencode($email)."&antibotlinks=&captcha=recaptcha&g-recaptcha-response=".$cap."&login=Verify+Captcha";
 		}
-		$r = curl("https://ltcmines.site/earns/".$coin.r,h("https://ltcmines.site/earns/".$coin.r),$data,1)[1];
+		$r = curl(host."wts/".$coin.r,h(host."wts/".$coin.r),$data,1)[1];
 		
 		$ss = explode('<',explode('<i class="fas fa-money-bill-wave"></i> ',$r)[1])[0];
 		$wr = explode('</div>',explode('<div class="alert alert-danger">',$r)[1])[0];
@@ -119,8 +118,9 @@ while(true){
 			hapus("Email_Faucetpay");
 			exit(Error($wrac.n));
 		}else{
-			continue;
+			$res = his([$coin=>1],$res);
 			print_r($r);exit;
+			continue;
 		}
 	}
 	if(min($res) > 2)break;
