@@ -4,3 +4,4 @@
 
 [+] Apikey -> Onlyfaucet
 [+] Apikey -> 99mmo
+[+] Free -> DogeFreeIn
