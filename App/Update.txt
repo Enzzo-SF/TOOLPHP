@@ -1,9 +1,5 @@
-@Ruble
-[-] Free -> AvisoBz
-
 @Crypto
 
-[*] Apikey -> BagicoIn
-[*] Apikey -> KeranCo
+[-] Apikey -> AdbeastOrg
 
-[+] Apikey -> MulticryptoSite
+[+] Apikey -> Onlyfaucet
