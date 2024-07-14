@@ -1,10 +1,7 @@
 @Crypto
 
-[*] Apikey -> Coinmasters
+[-] Apikey -> AdbeastOrg
 
-[+] Apikey -> AdbeastOrg
-[+] Apikey -> Faucetgame
-
-[-] Free -> Autobitcositeplus
-[-] Apikey -> Bitcositeplus
-[-] Apikey -> BtcfaucetIn
+[+] Apikey -> Onlyfaucet
+[+] Apikey -> 99mmo
+[+] Free -> DogeFreeIn

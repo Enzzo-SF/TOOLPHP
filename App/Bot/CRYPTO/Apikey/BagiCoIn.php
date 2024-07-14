@@ -22,7 +22,7 @@ Cetak("Register",register_link);
 print line();
 if(!Simpan("Cookie"))print "\n".line();
 if(!ua())print "\n".line();
-/*
+
 if(!$cek_api_input){
 	$apikey = MenuApi();
 	if(provider_api == "Multibot"){
@@ -32,7 +32,7 @@ if(!$cek_api_input){
 	}
 	$cek_api_input = 1;
 }
-*/
+
 print p."Jangan lupa \033[101m\033[1;37m Subscribe! \033[0m youtub saya :D";sleep(2);
 //system("termux-open-url ".youtube);
 Ban(1);
@@ -48,7 +48,7 @@ if(!$r["user"]){
 }
 
 Cetak("Email",$r["user"]);
-//Cetak("Bal_Api",$api->getBalance());
+Cetak("Bal_Api",$api->getBalance());
 print line();
 menu:
 Menu(1,"Claim Faucet");
@@ -102,7 +102,6 @@ foreach($list_coin as $a => $coins){
 		$match[$datax[2][$i]] = $datax[3][$i];
 	}
 	
-	/* OLD
 	$sitekey = explode('"',explode('<div class="g-recaptcha" data-sitekey="',$r)[1])[0];
 	preg_match_all('/(input:?.*?)name=\"(.*?)\" value=\"([^"]+)"/is',$r,$datax);
 	$match=[];
@@ -120,9 +119,9 @@ foreach($list_coin as $a => $coins){
 	}
 	if(!$cap)continue;
 	$data = http_build_query($match);
-	*/
 	
 	# NEW
+	/*
 	tmr(7);
 	$r = json_decode(curl('https://bagi.co.in/challenge.php',h())[1],1);
 	$signature = $r['signature'];
@@ -131,6 +130,7 @@ foreach($list_coin as $a => $coins){
 	$altcha = @Captcha::altcha($signature, $salt, $challenge);
 	$match['altcha'] = $altcha;
 	$data = http_build_query($match);
+	*/
 	
 	$r = curl(host.$direc,h(),$data)[1];
 	if(preg_match('/does not have sufficient/',$r)){
@@ -150,7 +150,7 @@ foreach($list_coin as $a => $coins){
 	}
 	if($ss){
 		Cetak($match['claim_crypto'],$ss);
-		//Cetak("Bal_Api",$api->getBalance());
+		Cetak("Bal_Api",$api->getBalance());
 		$res = his([$coint=>1],$res);
 		print line();
 	}elseif($dg){
