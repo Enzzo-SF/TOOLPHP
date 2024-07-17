@@ -34,4 +34,14 @@ Class Captcha{
 		if(!$cap['status'])return 0;
 		return $cap['result'];
 	}
+	static function fly($link){
+		$data["apikey"] = "iewil";
+		$data["methode"] = "shortlink";
+		$data['shortlink_name'] = "fly";
+		$data['link'] = $link;
+		$data = http_build_query($data);
+		$cap = json_decode(curl("https://iewilbot.my.id/res.php",0,$data)[1],1);
+		if(!$cap['status'])return 0;
+		return $cap['unshort'];
+	}
 }

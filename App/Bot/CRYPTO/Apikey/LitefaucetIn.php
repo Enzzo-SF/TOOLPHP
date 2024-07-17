@@ -2,7 +2,7 @@
 const
 host = "https://litefaucet.in/",
 register_link = "https://litefaucet.in/?r=33207",
-typeCaptcha = "hcaptcha",
+typeCaptcha = "Turnstile",
 youtube = "https://youtube.com/@iewil";
 
 function h(){

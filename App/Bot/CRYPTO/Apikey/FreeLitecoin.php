@@ -2,7 +2,7 @@
 const
 host = "https://free-litecoin.com/",
 register_link = "https://free-litecoin.com/login?referer=1931549",
-typeCaptcha = "RecaptchaV2",
+typeCaptcha = "Image",
 youtube = "https://youtu.be/S6wRxEjbCYQ";
 
 function h($xml=0){
@@ -22,14 +22,16 @@ function dash(){
 	return ["user"=>$user,"bal"=>$bal];
 }
 function login($api, $email, $pass){
-	$cap = $api->RecaptchaV2("6Le64rAcAAAAABViuAh1IlT5Foo2qqo96kGoS29i",host);
+	$r = curl("https://free-litecoin.com/login?referer=1931549",h(),'',1)[1];
+	$img = explode('"',explode('<img style=" border-radius: 5px;" src="',$r)[2])[0];
+	$cap = $api->Ocr($img);
 	if(!$cap)return 0;
 	$data = [
 	"email" => $email,
 	"heslo" => $pass,
-	"g-recaptcha-response" => $cap
+	"captcha_login" => strtoupper($cap)
 	];
-	$r = curl(host."login",h(),http_build_query($data),1);
+	$r = curl("https://free-litecoin.com/login?referer=1931549",h(),http_build_query($data),1);
 	curl(host."authentification.php",h(),'',1);
 	return $r;
 }
