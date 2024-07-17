@@ -66,7 +66,8 @@ function login($email){
 		goto ulang;
 	}
 }
-function getSl($coin){
+function getSl($coin, $api){
+	$i = 0;
 	ulang_Onlyfaucet:
 	$r = curl(host.'links/currency/'.$coin,h())[1];
 	$list = explode('<h4 class="card-title mt-0">',$r);
@@ -95,8 +96,14 @@ function getSl($coin){
 			break;
 		}
 	}
+	print Error($final);
 	$cap = @Captcha::fly($final);
-	if($cap)goto ulang_Onlyfaucet;
+	print "\r                               \r";
+	if(!$cap){
+		$i++;
+		if($i > 3)return 0;
+		goto ulang_Onlyfaucet;
+	}
 	tmr(30);
 	$r = curl($cap,h())[1];
 	$ss = explode("account!",explode("html: '0.",$r)[1])[0];
@@ -210,7 +217,7 @@ while(true){
 		$wr = explode(".",explode("html: '",$r)[1])[0];
 		if($ban){print "\r                      \r";exit(m."Your account".$ban.n);}
 		if(preg_match('/You must complete at least/',$r)){
-			$bp = getSl($coin);
+			$bp = getSl($coin, $api);
 			if(!$bp){
 				exit(Error(explode("'",explode("html: '",$r)[1])[0]));
 			}
