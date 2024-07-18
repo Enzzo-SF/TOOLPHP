@@ -25,9 +25,9 @@ function Get_Faucet($patch){
 	$url = host.$patch;
 	return Curl($url,h())[1];
 }
-function Post_Faucet($patch, $csrf, $token, $atb){
+function Post_Faucet($patch, $csrf, $token, $atb, $cap){
 	$url = host.$patch."/verify";
-	$data = "antibotlinks=".$atb."&csrf_token_name=".$csrf."&token=".$token."&captcha=recaptchav2&g-recaptcha-response=";
+	$data = "antibotlinks=".$atb."&csrf_token_name=".$csrf."&token=".$token."&captcha=recaptchav2&g-recaptcha-response=".$cap;
 	return Curl($url,h(),$data)[1];
 }
 function Firewall(){
@@ -43,7 +43,7 @@ function Firewall(){
 			$data["cf-turnstile-response"] = $cap;
 		}else
 		if($recap){
-			//$cap = $api->RecaptchaV2($recap, host."firewall");
+			$cap = $api->RecaptchaV2($recap, host."firewall");
 			$data["g-recaptcha-response"] = '';
 		}else{
 			continue;
@@ -79,13 +79,13 @@ function Claim($api, $patch){
 			
 	$csrf = explode('"',explode('_token_name" id="token" value="',$r)[1])[0];
 	$token = explode('"',explode('name="token" value="',$r)[1])[0];
-	//$sitekey = explode('"',explode('<div class="cf-turnstile" data-sitekey="',$r)[1])[0];
-	//if(!$sitekey){print Error("Sitekey Error\n"); continue;}
+	$sitekey = explode('"',explode('<div class="g-recaptcha" data-sitekey="',$r)[1])[0];
+	if(!$sitekey){print Error("Sitekey Error\n"); continue;}
 	$atb = $api->Antibot($r);
 	if(!$atb)continue;
-	//$cap = $api->Turnstile($sitekey, host.$patch);
-	//if(!$cap)continue;
-	$r = Post_Faucet($patch, $csrf, $token, $atb);
+	$cap = $api->RecaptchaV2($sitekey, host.$patch);
+	if(!$cap)continue;
+	$r = Post_Faucet($patch, $csrf, $token, $atb, $cap);
 	$ss = explode("has",explode("Swal.fire('Good job!', '",$r)[1])[0];
 	if($ss){
 		Cetak("Sukses",$ss);
@@ -143,14 +143,13 @@ function ptc($api){
 		if($idptc == 0){
 			print Cetak("Visit",$ptc);
 		}
-		$sitekey = explode('"',explode('<div class="cf-turnstile" data-sitekey="',$r)[1])[0];
+		$sitekey = explode('"',explode('<div class="g-recaptcha" data-sitekey="',$r)[1])[0];
 		$token = explode('"',explode('name="token" value="',$r)[1])[0];
 		$csrf = explode('"',explode('<input type="hidden" name="csrf_token_name" value="',$r)[1])[0];
 		$tmr = explode(';',explode('var timer = ',$r)[1])[0];
 		if($tmr){tmr($tmr);}
-		//$cap = $api->Turnstile($sitekey, host.'ptc/view/'.$id);
-		//if(!$cap)continue;
-		$cap = '';
+		$cap = $api->RecaptchaV2($sitekey, host.'ptc/view/'.$id);
+		if(!$cap)continue;
 		$data = 'captcha=recaptchav2&g-recaptcha-response='.$cap.'&csrf_token_name='.$csrf.'&token='.$token;
 		$r = curl(host.'ptc/verify/'.$id,h(),$data)[1];
 		$ss = explode('has',explode("Swal.fire('Good job!', '",$r)[1])[0];

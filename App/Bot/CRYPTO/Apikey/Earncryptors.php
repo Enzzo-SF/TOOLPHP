@@ -1,7 +1,7 @@
 <?php
 const
 host = "https://earncryptowrs.in/",
-register_link = "https://earncryptowrs.in/?r=759",
+register_link = "https://earncryptowrs.in/?r=10493",
 typeCaptcha = "Turnstile",
 youtube = "https://youtube.com/@iewil";
 

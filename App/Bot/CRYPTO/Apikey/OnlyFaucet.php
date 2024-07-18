@@ -13,6 +13,7 @@ function h($data=0){
 	$h[] = "Cookie: ".simpan("Cookie");
 	return $h;
 }
+
 function Firewall(){
 	global $api;
 	while(1){
@@ -65,6 +66,58 @@ function login($email){
 		goto ulang;
 	}
 }
+function getSl($coin, $api){
+	$i = 0;
+	ulang_Onlyfaucet:
+	$r = curl(host.'links/currency/'.$coin,h())[1];
+	$list = explode('<h4 class="card-title mt-0">',$r);
+	foreach($list as $a => $cok){
+		if($a == 0)continue;
+		$name = explode('</h4>',$cok)[0];
+		$link = explode('"',explode('<a href="',$cok)[1])[0];
+		$sisa = explode('/',explode('<span class="badge badge-info">',$cok)[1])[0];
+		if(!$sisa)continue;
+		if(in_array($name, ['Clicksfly.me', 'Wefly.me', 'Urlsfly.me', 'Linksfly.me'])){
+			$r = curl($link,h());
+			if(preg_match('/You still have uncompleted shortlink/',$r[1])){
+				$loc = explode('"',explode('location.href = "',$r[1])[1])[0];
+				$r = curl($loc,h())[0];
+				$location = explode('location: ',$r);
+				foreach($location as $finallocation){
+					$dest = trim(explode("\n", $finallocation)[0]);
+					if(in_array(parse_url($dest)['host'], ['clicksfly.me', 'wefly.me', 'urlsfly.me', 'linksfly.me'])){
+						$final = $dest;
+						break;
+					}
+				}
+			}
+			if($final)break;
+			$final = trim(explode("\n",explode('location:',$r[0])[1])[0]);
+			break;
+		}
+	}
+	print Error($final);
+	$cap = @Captcha::fly($final);
+	print "\r                               \r";
+	if(!$cap){
+		$i++;
+		if($i > 3)return 0;
+		goto ulang_Onlyfaucet;
+	}
+	tmr(30);
+	$r = curl($cap,h())[1];
+	$ss = explode("account!",explode("html: '0.",$r)[1])[0];
+	if($ss){
+		print Cetak($coin,$sisa);
+		print Sukses("0.".str_replace("has been sent ","",strip_tags($ss)));
+		Cetak("Bal_Api",$api->getBalance());
+		print line();
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
 Ban(1);
 cookie:
 Cetak("Register",register_link);
@@ -163,8 +216,12 @@ while(true){
 		$ss = explode("account!",explode("html: '0.",$r)[1])[0];
 		$wr = explode(".",explode("html: '",$r)[1])[0];
 		if($ban){print "\r                      \r";exit(m."Your account".$ban.n);}
-		if(preg_match('/Shortlink in order to claim from the faucet!/',$r)){
-			exit(Error(explode("'",explode("html: '",$r)[1])[0]));
+		if(preg_match('/You must complete at least/',$r)){
+			$bp = getSl($coin, $api);
+			if(!$bp){
+				exit(Error(explode("'",explode("html: '",$r)[1])[0]));
+			}
+			$res = his([$coin=>1],$res);
 		}
 		if(preg_match('/sufficient funds/',$r)){
 			$res = his([$coin=>3],$res);

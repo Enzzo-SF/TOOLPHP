@@ -270,27 +270,27 @@ Cetak("Energy",$r["energy"]);
 Cetak("Bal_Api",$api->getBalance());
 print line();
 menu:
-Menu(1,"Faucet");
-Menu(2,"Faucet auto");
-Menu(3,"Ptc");
-Menu(4,"Challenges");
-Menu(5,"Offerwall [Excentiv]");
-Menu(6,"Offerwall [Offers4crypto]");
+//Menu(1,"Faucet");
+//Menu(2,"Faucet auto");
+Menu(1,"Ptc");
+//Menu(4,"Challenges");
+Menu(2,"Offerwall [Excentiv]");
+Menu(3,"Offerwall [Offers4crypto]");
 $pil = readline(Isi("Number"));
 print line();
-if($pil == 1){
+if($pil == 5){
 	if(GetFaucet("faucet"))goto cookie;
 	goto menu;
-}elseif($pil == 2){
+}elseif($pil == 5){
 	GetAutoFaucet();
 	goto menu;
-}elseif($pil == 3){
+}elseif($pil == 1){
 	GetPtc();
 	goto menu;
-}elseif($pil == 4){
+}elseif($pil == 5){
 	Achievements();
 	goto menu;
-}elseif($pil == 5){
+}elseif($pil == 2){
 	Title("Offerwall [Excentiv]");
 	$r = curl(host.'easyoffer',h())[1];
 	$offerlist = explode('offerwall/',$r);
@@ -307,7 +307,7 @@ if($pil == 1){
 		}
 	}
 	goto menu;
-}elseif($pil == 6){
+}elseif($pil == 3){
 	Title("Offerwall [Offers4crypto]");
 	$r = curl(host.'easyoffer',h())[1];
 	$offerlist = explode('offerwall/',$r);

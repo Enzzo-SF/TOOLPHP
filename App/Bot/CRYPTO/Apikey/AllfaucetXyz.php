@@ -11,134 +11,12 @@ function h(){
 	return $h;
 }
 
-function GetDashboard(){
-	$r = curl(host.'dashboard',h())[1];
-	$data['bal'] = explode('</p>', explode('<i class="fas fa-coins"></i> ', $r)[1])[0];
-	return $data;
-}
-function faucet(){
-	global $api;
-	while(true){
-		$data = "";
-		$r = curl(host.'faucet',h())[1];
-		$cek = GlobalCheck($r);
-		if($cek['cf']){
-			print Error("Cloudflare Detect\n");
-			hapus("Cookie");
-			print line();
-			return 1;
-		}
-		if(preg_match('/Daily limit reached/',$r)){
-			break;
-		}
-		$csrf = explode('"',explode('id="token" value="',$r)[1])[0];
-		$token = explode('"',explode('name="token" value="',$r)[1])[0];
-		$recaptcha = explode('"',explode('<div class="g-recaptcha" data-sitekey="',$r)[1])[0];
-		$hcaptcha = explode('"',explode('<div class="h-captcha" data-sitekey="',$r)[1])[0];
-		$tmr = explode(';',explode('let timer = ',$r)[1])[0];
-		if($recaptcha){
-			$cap = $api->RecaptchaV2($recaptcha, host.'faucet');
-			if(!$cap)continue;
-			$data = "captcha=recaptchav2&g-recaptcha-response=".$cap."&";
-		}else
-		if($hcaptcha){
-			$cap = $api->Hcaptcha($hcaptcha, host.'faucet');
-			if(!$cap)continue;
-			$data = "captcha=hcaptcha&g-recaptcha-response=".$cap."&h-captcha-response=".$cap."&";
-		}else{
-			print Error("Sitekey Error");
-			sleep(6);
-			print "\r                         \r";
-			continue;
-		}
-		if($tmr){tmr($tmr);}
-		if(explode('\"',explode('rel=\"',$r)[1])[0]){
-			$atb = $api->AntiBot($r);
-			if(!$atb)continue;
-			$data .= "antibotlinks=".$atb."&";
-		}
-		$data .= "csrf_token_name=".$csrf."&token=".$token;
-		
-		$r = curl(host.'faucet/verify',h(),$data)[1];
-		$ss = explode('has',explode("text: '",$r)[1])[0];
-		if($ss){
-			print Sukses($ss);
-			Cetak("Balance",GetDashboard()["bal"]);
-			Cetak("Bal_Api",$api->getBalance());
-			print line();
-		}else {
-			Cetak("Balance",GetDashboard()["bal"]);
-			Cetak("Bal_Api",$api->getBalance());
-			print line();
-		}
-	}
-	print Error("Daily faucet limit\n");
-	print line();
-}
-function ptc(){
-	global $api;
-	while(true){
-		$r = curl(host.'ptc',h())[1];
-		$cek = GlobalCheck($r);
-		if($cek['cf']){
-			print Error("Cloudflare Detect\n");
-			hapus("Cookie");
-			print line();
-			return 1;
-		}
-		if(preg_match('/Daily limit reached/',$r)){
-			break;
-		}
-		$id = explode("'",explode('/view/',$r)[1])[0];
-		if(!$id){
-			print Error("Ptc Habis\n");
-			print line();
-			return;
-		}
-		$r = curl(host."ptc/view/".$id,h())[1];
-		$csrf = explode('"',explode('name="csrf_token_name" value="',$r)[1])[0];
-		$token = explode('"',explode('name="token" value="',$r)[1])[0];
-		$sitekey = explode('"',explode('data-sitekey="',$r)[1])[0];
-		if(!$sitekey){
-			print Error("Sitekey Error");
-			sleep(6);
-			print "\r                         \r";
-			continue;
-		}
-		$tmr = explode(';',explode('let timer = ',$r)[1])[0];
-		$ptc = explode('</title>',explode('<title>',$r)[1])[0];
-		if(strlen($ptc) > 15){$ptc = substr($ptc,0,15);}
-		Cetak("Visit",$ptc);
-		if($tmr){
-			tmr($tmr);
-		}
-        
-		$cap = $api->RecaptchaV2($sitekey, host."ptc/view/".$id);
-		if(!$cap)continue;
-		
-		$data = "captcha=recaptchav2&g-recaptcha-response=".$cap."&csrf_token_name=".$csrf."&token=".$token;
-		$r = curl(host."ptc/verify/".$id,h(),$data)[1];
-		$ss = explode('has',explode("text: '",$r)[1])[0];
-		if($ss){
-			print Sukses($ss);
-			Cetak("Balance",GetDashboard()["bal"]);
-			Cetak("Bal_Api",$api->getBalance());
-			print line();
-		}else {
-			Cetak("Balance",GetDashboard()["bal"]);
-			Cetak("Bal_Api",$api->getBalance());
-			print line();
-		}
-	}
-}
-
 Ban(1);
 cookie:
 Cetak("Register",register_link);
 print line();
 if(!Simpan("Cookie"))print "\n".line();
 if(!ua())print "\n".line();
-exit(Error("script on progress\n"));
 
 if(!$cek_api_input){
 	$apikey = MenuApi();
@@ -153,19 +31,129 @@ print p."Jangan lupa \033[101m\033[1;37m Subscribe! \033[0m youtub saya :D";slee
 //system("termux-open-url ".youtube);
 Ban(1);
 
-$r = GetDashboard();
-if(!$r["bal"]){
+$r = curl(host."dashboard",h())[1];
+$user = explode('</b>',explode('<span id="greeting"></span> <b>',$r)[1])[0];
+if(!$user){
 	print Error("Session expired".n);
 	hapus("Cookie");
-	sleep(3);
 	print line();
 	goto cookie;
 }
-Cetak("Balance",$r["bal"]);
+$bal = explode(' USD</b>',explode('<b>Account Balance: ',$r)[1])[0];
+$min = explode('"',explode('name="amount" min="',$r)[1])[0];
+
+Cetak("Username",$user);
+Cetak("Balance",$bal);
+$address = explode('">',explode('placeholder="Connect Your FaucetPay Email" value="',$r)[1])[0];
+$csrf = explode('">',explode('<input type="hidden" name="csrf_token_name" id="token" value="',$r)[1])[0];
+$token = explode('">',explode('<input type="hidden" name="token" value="',$r)[1])[0];
+if(!$address){
+	$wallet = readline(Isi("email fp"));
+	$data = "csrf_token_name=".$csrf."&token=".$token."&wallet=".str_replace('@','%40',$wallet);
+	$r = curl(host."dashboard/authorize",h(),$data)[1];
+	$ss = explode("'",explode("html: '",$r)[1])[0];
+	if($ss){
+		print Sukses($ss);
+		print line();
+		goto cookie;
+	}
+}
+Cetak("Wallet",$address);
 Cetak("Bal_Api",$api->getBalance());
 print line();
+if($bal >= $min){
+	$csrf = explode('">',explode('<input type="hidden" name="csrf_token_name" id="token" value="',$r)[1])[0];
+	$token = explode('">',explode('<input type="hidden" name="token" value="',$r)[1])[0];
+	$coin = explode('"',explode('value="',explode('<input class="form-check-input" type="radio" name="currency"',$r)[1])[1])[0];
+	$data = "csrf_token_name=".$csrf."&token=".$token."&amount=".substr($bal,0,5)."&currency=".$coin;
+	$r = curl(host."withdraw",h(),$data)[1];
+	$ss = explode("account!'",explode("html: '0.",$r)[1])[0];
+	if($ss){
+		print Sukses($ss);
+		print line();
+	}
+}
+
+$r = curl(host."dashboard",h())[1];
+$con = explode('/faucet/currency/',$r);
 while(true){
-	if(ptc())goto cookie;
-	if(faucet())goto cookie;
-	tmr(600);
+	foreach($con as $a => $coins){
+		if($a == 0)continue;
+		$coin = explode('"',$coins)[0];
+		$r = curl(host."faucet/currency/".$coin,h())[1];
+		if(preg_match('/Firewall/',$r)){firewall();continue;}
+		if(preg_match('/An uncaught Exception was encountered/',$r)){print Error("An uncaught Exception was encountered\n");sleep(2);print "\r                                 \r";tmr(60);continue;}
+		if(preg_match('/Just a moment.../',$r)){hapus("Cookie");print Error("Cloudflare\n");print line();goto cookie;}
+		if(preg_match('/Please confirm your email address to be able to claim or withdraw/',$r)){print Error("Please confirm your email address to be able to claim or withdraw\n");print line();exit;}
+		if($res){
+			if($res[$coin] > 2)continue;
+		}
+		if(preg_match("/You don't have enough energy for Auto Faucet!/",$r)){exit(Error("You don't have enough energy for Auto Faucet!\n"));}
+		if(preg_match('/Daily claim limit/',$r)){
+			$res = his([$coin=>3],$res);
+			print Cetak($coin,"Daily claim limit");continue;}
+		$status_bal = explode('</span>',explode('<span class="badge badge-danger">',$r)[1])[0];
+		if($status_bal == "Empty"){
+			$res = his([$coin=>3],$res);
+			print Cetak($coin,"Sufficient funds");continue;
+		}
+		$tmr = explode('-',explode('var wait = ',$r)[1])[0];
+		if($tmr){
+			tmr($tmr);
+		}
+		preg_match('/(\d{1,})\/(\d{1,})/',$r,$sisa);
+		if($sisa[1] <= null){
+			$res = his([$coin=>3],$res);
+			print Cetak($coin,"Daily claim limit");continue;
+		}
+		$csrf = explode('">',explode('<input type="hidden" name="csrf_token_name" id="token" value="',$r)[1])[0];
+		$token = explode('">',explode('<input type="hidden" name="token" value="',$r)[1])[0];
+		$sitekey = explode('"',explode('<div class="g-recaptcha" data-sitekey="',$r)[1])[0];
+		if(!$sitekey){print Error("Sitekey Error\n"); continue;}
+		$cap = $api->RecaptchaV2($sitekey, host."faucet/currency/".$coin);
+		if(!$cap)continue;
+		$atb = $api->Antibot($r);
+		if(!$atb)continue;
+		
+		$data = "antibotlinks=$atb&csrf_token_name=$csrf&token=$token&captcha=recaptchav2&g-recaptcha-response=".$cap;
+		$r = curl(host."faucet/verify/".$coin,h(),$data)[1];
+		if(preg_match('/Shortlink in order to claim from the faucet!/',$r)){
+			exit(Error(explode("'",explode("html: '",$r)[1])[0]));
+		}
+		$ss = explode("account!'",explode("html: '0.",$r)[1])[0];
+		$wr = explode(".",explode("html: '",$r)[1])[0];
+		$ban = explode('</div>',explode('<div class="alert text-center alert-danger"><i class="fas fa-exclamation-circle"></i> Your account',$r)[1])[0];
+		if(preg_match('/Shortlink in order to claim from the faucet!/',$r)){
+			exit(Error(explode("'",explode("html: '",$r)[1])[0]));
+		}
+		if($ban){
+			exit(Error("Your account".$ban.n));
+		}
+		if(preg_match('/sufficient funds/',$r)){
+			$res = his([$coin=>3],$res);
+			print Cetak($coin,"Sufficient funds");
+			continue;
+		}
+		if($ss){
+			print Cetak($coin,$sisa[0]);
+			print Sukses("0.".$ss);
+			Cetak("Bal_Api",$api->getBalance());
+			print line();
+			$res = his([$coin=>1],$res);
+		}elseif($wr){
+			print Error(substr($wr,0,30));
+			sleep(3);
+			print "\r                  \r";
+			$res = his([$coin=>1],$res);
+		}else{
+			print Error("Something wrong\n");
+			sleep(3);
+			print "\r                  \r";
+			$res = his([$coin=>1],$res);
+		}
+	}
+	if(!$res){
+		continue; 
+	}
+	if(min($res) > 2)break;
 }

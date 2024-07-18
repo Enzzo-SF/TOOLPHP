@@ -103,32 +103,6 @@ function Claim($api, $patch){
 	endwhile;
 	print Error("Daily claim limit\n");
 }
-function auto(){
-	while(true){
-		$r=curl(host."auto",h())[1];
-		if(preg_match("/Firewall/",$r)){
-			exit(Error("Firewall\n"));
-		}
-		if(preg_match("/You don't have enough energy/",$r)){
-			echo Error("You don't have enough energy".n);
-			print line();break;
-		}
-		$tmr=explode(',',explode('let timer = ',$r)[1])[0];
-		$token=explode('"',explode('name="token" value="',$r)[1])[0];
-		
-		if($tmr){tmr($tmr);}
-		
-		$data = "token=".$token;
-		$r = curl(host."auto/verify",h(),$data)[1];
-		$ss = explode('has',explode("Swal.fire('Good job!', '",$r)[1])[0];
-		if($ss){
-			Cetak("Sukses",$ss);
-			Cetak("Balance",Get_Dashboard()["balance"]);
-			Cetak("Energy",Get_Dashboard()["energy"]);
-			print line();
-		}
-	}
-}
 function ptc($api){
 	while(true){
 		$r = curl(host.'ptc',h())[1];
@@ -291,8 +265,6 @@ if($pil == 2){
 			hapus("Cookie");
 			goto cookie;
 		}
-		auto();
-		aciv();
 		tmr(600);
 	}
 }

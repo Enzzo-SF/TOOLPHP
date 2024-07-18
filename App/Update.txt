@@ -1,7 +1,10 @@
 @Crypto
 
-[-] Apikey -> AdbeastOrg
+[*] Apikey -> AllfaucetXyz
+[*] Apikey -> Faucetbull
+[*] Apikey -> FreeLitecoin
+[*] Apikey -> LitefaucetIn
+[*] Apikey -> LiteonionOnline
+[*] Apikey -> Onlyfaucet
 
-[+] Apikey -> Onlyfaucet
-[+] Apikey -> 99mmo
-[+] Free -> DogeFreeIn
+[-] Apikey -> Claimclicks
