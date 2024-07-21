@@ -276,22 +276,32 @@ Cetak("Energy",$r["energy"]);
 Cetak("Bal_Api",$api->getBalance());
 print line();
 menu:
-Menu(1, "Earn Coin");
-Menu(2, "Shortlinks");
+Menu(1, "Ptc & Faucet");
+Menu(2, "Autofaucet");
+Menu(3, "Achievment");
+Menu(4, "Shortlinks");
 $pil = readline(Isi("Number"));
 print line();
-if($pil == 2){
-	if(shortlink())goto cookie;
-	goto menu;
-}else{
+if($pil == 1){
 	while(true){
 		ptc($api);
 		if(Claim($api, "faucet")){
 			hapus("Cookie");
 			goto cookie;
 		}
-		auto();
-		aciv();
 		tmr(600);
 	}
+}elseif($pil == 2){
+	auto();
+	goto menu;
+}elseif($pil == 3){
+	aciv();
+	goto menu;
+}elseif($pil == 4){
+	if(shortlink())goto cookie;
+	goto menu;
+}else{
+	print error("Tolol\n");
+	print line();
+	goto menu;
 }
