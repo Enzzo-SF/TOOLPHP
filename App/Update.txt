@@ -1,10 +1,6 @@
 @Crypto
 
-[*] Apikey -> AllfaucetXyz
-[*] Apikey -> Faucetbull
-[*] Apikey -> FreeLitecoin
-[*] Apikey -> LitefaucetIn
-[*] Apikey -> LiteonionOnline
-[*] Apikey -> Onlyfaucet
+[+] Free -> Faucetplus
+[+] Free -> Flashfaucet
 
-[-] Apikey -> Claimclicks
+[-] Free -> Clickrighcash

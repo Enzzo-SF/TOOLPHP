@@ -1,11 +1,11 @@
 <?php
 const
-host = "https://clickrightcash.online/",
-register_link = "https://clickrightcash.online/?r=1273",
+host = "https://faucetplus.online/",
+register_link = "https://faucetplus.online/?r=631",
 youtube = "https://youtube.com/@iewil";
 
 function h($data=0){
-	$h[] = "Host: clickrightcash.online";
+	$h[] = "Host: faucetplus.online";
 	$h[] = "X-Requested-With: XMLHttpRequest";
 	$h[] = "user-agent: ".ua();
 	return $h;
